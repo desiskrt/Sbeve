@@ -319,68 +319,7 @@ client.on('message', async (message) => {
   }
 
 
-client.on('message', async (message) => {
-  // Check if the message is from a bot or doesn't start with the prefix
-  if (message.author.bot || !message.content.startsWith('E!')) {
-    return;
-  }
 
-  const args = message.content.slice('E!'.length).trim().split(/ +/);
-  const command = args.shift().toLowerCase();
-
-  // Check if the command is 'commandcreate'
-  if (command === 'commandcreate') {
-    // Check if the user is an admin
-    if (!message.member.hasPermission('ADMINISTRATOR')) {
-      message.channel.send('You need to be an administrator to create custom commands.');
-      return;
-    }
-
-    // Check if the correct number of arguments is provided
-    if (args.length !== 1) {
-      message.channel.send('Invalid command format. Please use E!commandcreate trigger,response.');
-      return;
-    }
-
-    const [trigger, response] = args[0].split(',');
-
-    // Create the custom command
-    customCommands.set(trigger.trim(), response.trim());
-    message.channel.send(`Custom command created: ${trigger} -> ${response}`);
-    console.log(`Custom command created: ${trigger} -> ${response}`)
-  } else if (command === 'commandlist') {
-    const customCommandList = Array.from(customCommands.keys()).join(', ');
-    message.channel.send(`Available custom commands: ${customCommandList}`);
-  } else if (command === 'commanddelete') {
-    // Check if the user is an admin
-    if (!message.member.hasPermission('ADMINISTRATOR')) {
-      message.channel.send('You need to be an administrator to delete custom commands.');
-      return;
-    }
-
-    // Check if the correct number of arguments is provided
-    if (args.length !== 1) {
-      message.channel.send('Invalid command format. Please use E!commanddelete trigger.');
-      return;
-    }
-
-    const trigger = args[0].toLowerCase();
-
-    if (customCommands.has(trigger)) {
-      customCommands.delete(trigger);
-      message.channel.send(`Custom command ${trigger} has been deleted.`);
-    } else {
-      message.channel.send(`Custom command ${trigger} does not exist.`);
-    }
-  } else {
-    // Check if the message matches a custom command trigger
-    const trigger = command.toLowerCase();
-    if (customCommands.has(trigger)) {
-      const response = customCommands.get(trigger);
-      message.channel.send(response);
-    }
-  }
-});
 
 
 });
